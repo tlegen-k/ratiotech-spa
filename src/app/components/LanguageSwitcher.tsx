@@ -1,30 +1,20 @@
 "use client";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export default function LanguageSwitcher() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+type Props = {
+  current: string;
+  onChange: (locale: string) => void;
+};
 
-  const locale = searchParams.get("locale") || "en";
-  const languages = ["en", "ru", "kz"];
-
-  const switchLocale = (l: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("locale", l);
-    router.push(`${pathname}?${params.toString()}`);
-  };
-
+export default function LanguageSwitcher({ current, onChange }: Props) {
   return (
-    <div className="flex justify-end p-4 space-x-3">
-      {languages.map((l) => (
+    <div className="fixed top-4 right-4 flex gap-2">
+      {["en", "ru", "kz"].map((loc) => (
         <button
-          key={l}
-          disabled={locale === l}
-          onClick={() => switchLocale(l)}
-          className="px-3 py-1 border rounded hover:bg-blue-50 transition disabled:opacity-50"
+          key={loc}
+          onClick={() => onChange(loc)}
+          className={`px-3 py-1 rounded border ${current === loc ? "bg-blue-500 text-white" : "bg-white text-gray-800"}`}
         >
-          {l.toUpperCase()}
+          {loc.toUpperCase()}
         </button>
       ))}
     </div>
